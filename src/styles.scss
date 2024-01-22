@@ -1,0 +1,43 @@
+//* You can add global styles to this file, and also import other style files */
+
+
+body {
+  text-align: center;
+}
+
+h1{
+  color: white;
+  background-color: rgb(57,129,141);
+  border-radius: 10px;
+  text-align: center;
+  margin: auto;
+  margin-bottom: 10px;
+  padding: 10px;
+  width: 320px;
+}
+
+
+
+.label-datas-to-display {
+  color: gray;
+  background-color: white;
+  border-radius: 10px;
+  border: 2px rgb(57,129,141) solid;
+  padding: 5px 10px;
+  width: auto;
+  text-align: center;
+}
+
+.bold-black-totalsandnumbers
+{
+  font-weight:800;
+  color: black;
+}
+
+
+@media (max-width: 600px) {
+  .chartjs-render-monitor {
+    height: 700px !important;
+  }
+}
+

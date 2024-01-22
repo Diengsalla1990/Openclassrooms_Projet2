@@ -1,0 +1,38 @@
+
+
+<div class="container">
+
+  <div>
+    <h1 class="title">{{ titre }}</h1>
+  </div>
+
+  <div class="row">
+      <div class="col-md-6">
+
+          <p class="label-datas-to-display">Number of JOs<br><span class="bold-black-totalsandnumbers">{{this.nombreDeJOs}}</span></p>
+
+      </div>
+
+      <div class="col-md-6" >
+
+          <p class="label-datas-to-display">Number of countries<br><span class="bold-black-totalsandnumbers">{{ (this.olympics).length }}</span></p>
+
+      </div>
+
+      <div class="row mt-3">
+            <canvas baseChart height="450"
+              [type]="'pie'"
+              [datasets]="pieChartDatasets"
+              [labels]="pieChartLabels"
+              [options]="pieChartOptions"
+              [plugins]="pieChartPlugins"
+              [legend]="pieChartLegend"
+              (chartClick)="chartClicked($event)">
+            </canvas>
+        </div>
+      </div>
+
+  </div>
+
+
+
