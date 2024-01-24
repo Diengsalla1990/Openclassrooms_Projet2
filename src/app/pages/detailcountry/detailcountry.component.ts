@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Olympic } from 'src/app/core/models/Olympic';
-import { Subject, catchError, takeUntil, tap, throwError } from 'rxjs';
+import { Subject, Subscription, catchError, takeUntil, tap, throwError } from 'rxjs';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class DetailCountryComponent implements OnInit {
   public olympics: Olympic[] = [];
   public errorMessage!: String;
-
+  private dataSubcription : Subscription | undefined;
   //subscribe/unsubscribe
   private destroy$!: Subject<boolean>
 
@@ -40,7 +40,7 @@ export class DetailCountryComponent implements OnInit {
 
     // Récupération des données du fichier json (grâce à l'observable)
 
-      this.olympicService.getOlympics().pipe(
+    this.dataSubcription = this.olympicService.getOlympics().pipe(
         takeUntil(this.destroy$),
         tap(data=> {
           // Pas d'olympic retourné -> redirection vers la page not found
@@ -60,6 +60,13 @@ export class DetailCountryComponent implements OnInit {
         this.errorMessage = err;
       }
   });
+}
+
+
+ngOnDestroy(): void {
+  if (this.dataSubcription) {
+    this.dataSubcription.unsubscribe();
+  }
 }
 
 
@@ -98,7 +105,7 @@ export class DetailCountryComponent implements OnInit {
         },
         scales: {},
         plugins: {
-          legend: { display: false }, //Affiche ou non la légende du graphique
+          legend: { display: false}, //Affiche ou non la légende du graphique
           annotation: {
             annotations: [],
           },
@@ -111,9 +118,6 @@ export class DetailCountryComponent implements OnInit {
     this.router.navigateByUrl('');
   }
 
-  ngOnDestroy(): void {
-    //Unsubscribe de l'observable (éviter fuites mémoire)
-    this.destroy$.next(true);
-  }
+
 
 }

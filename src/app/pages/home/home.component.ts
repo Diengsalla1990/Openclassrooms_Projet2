@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChartOptions } from 'chart.js';
-import { Observable, Subject, of, takeUntil } from 'rxjs';
+import { Observable, Subject, Subscription, of, takeUntil } from 'rxjs';
 import { Olympic } from 'src/app/core/models/Olympic';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
@@ -12,7 +12,10 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
 })
 export class HomeComponent implements OnInit {
   public olympics : Olympic[] = [];
+
   public titre : string = "Medals per Country"
+
+  private dataSubcription : Subscription | undefined;
 
   errorMessage! : string ;
 
@@ -50,7 +53,7 @@ export class HomeComponent implements OnInit {
 
     // Récupération des données du fichier json (grâce à l'observable)
 
-      this.olympicService.getOlympics().pipe(
+      this.dataSubcription = this.olympicService.getOlympics().pipe(
         takeUntil(this.destroy$),
       ).subscribe({
         next : (dataJson) =>{
@@ -63,6 +66,14 @@ export class HomeComponent implements OnInit {
             this.errorMessage = err;
       }
     });
+
+
+  }
+
+  ngOnDestroy(): void {
+    if (this.dataSubcription) {
+      this.dataSubcription.unsubscribe();
+    }
   }
 
   //intialisation
@@ -94,10 +105,6 @@ export class HomeComponent implements OnInit {
     this.router.navigateByUrl(this.urlDetail+'/'+e.active[0].index);
   }
 
-  ngOnDestroy(): void {
-    // Unsubscribe de l'observable (éviter fuites mémoire)
-    this.destroy$.next(true);
-  }
 
 
 
